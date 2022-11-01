@@ -27,7 +27,7 @@ public class Transaction {
     // --- Foreign Key userID
 
     // TODO: Create foreign key accountId
-    // --- Foreign Key userID
+    // --- Foreign Key accountId
 
     // TODO: Check timestamps format and auditing
     private Timestamp transactionDate;
