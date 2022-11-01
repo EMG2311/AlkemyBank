@@ -5,12 +5,12 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "FIXED_TERM_DEPOSITS")
-public class FixedTermDeposits {
+public class FixedTermDeposit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FIXED_TERM_DEPOSITS_ID")
-    private Integer fixedTermDepositsId;
+    @Column(name = "FIXED_TERM_DEPOSIT_ID")
+    private Integer fixedTermDepositId;
 
     @Column(name = "AMOUNT", nullable = false)
     private Double amount;
