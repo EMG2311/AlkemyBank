@@ -1,19 +1,12 @@
 package com.alkemy.wallet.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.Data;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table( name = "USERS" )
+@Data
 public class User {
 
     @Id
@@ -32,6 +25,10 @@ public class User {
 
     @Column( nullable = false, name = "PASSWORD" )
     private String password;
+
+    @OneToOne( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST )
+    @JoinColumn( name = "ROLE_ID", referencedColumnName = "ROLE_ID", nullable = false )
+    private Role role;
 
     // TODO: check timestamps format and auditing
     private Timestamp creationDate;
