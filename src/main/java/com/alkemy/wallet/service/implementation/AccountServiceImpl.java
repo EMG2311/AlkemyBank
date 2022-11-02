@@ -1,5 +1,7 @@
 package com.alkemy.wallet.service.implementation;
 
+import com.alkemy.wallet.dto.AccountDto;
+import com.alkemy.wallet.mapper.AccountMapper;
 import com.alkemy.wallet.model.Account;
 import com.alkemy.wallet.model.Currency;
 import com.alkemy.wallet.model.User;
@@ -16,9 +18,10 @@ import java.util.Optional;
 @Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
     @Override
-    public void createAccount(int userId, Currency currency) {
+    public AccountDto createAccount(int userId, Currency currency) {
         User user = new User(userId);
         if(accountRepository.findAccountByUserIdAndCurrency(user, currency).isPresent()) {
             throw new RuntimeException("User already has an account for that currency.");
@@ -28,11 +31,11 @@ public class AccountServiceImpl implements AccountService {
         Date date = new Date();
         Timestamp creationDate = new Timestamp(date.getTime());
         Account account = new Account(user, currency, transactionLimit, balance, creationDate);
-        accountRepository.save(account);
+        return accountMapper.convertToDto(accountRepository.save(account));
     }
 
     @Override
-    public void reduceBalance(int accountId, double amount) {
+    public AccountDto reduceBalance(int accountId, double amount) {
         Optional<Account> account = accountRepository.findById(accountId);
         if(account.isEmpty()){
             throw new InvalidParameterException("Not found account.");
@@ -43,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
         }
         Account updatedAccount = account.get();
         updatedAccount.setBalance(oldBalance - amount);
-        accountRepository.save(updatedAccount);
+        return accountMapper.convertToDto(accountRepository.save(updatedAccount));
     }
 
     private double getTransactionLimitForCurrency(Currency currency){
