@@ -1,7 +1,7 @@
 package com.alkemy.wallet.service;
 
-import com.alkemy.wallet.model.Transaction;
+import com.alkemy.wallet.dto.TransactionDetailDto;
 
 public interface TransactionService {
-    Transaction getTransactionDetailById (Integer Id) throws Exception;
+    TransactionDetailDto getTransactionDetailById (Integer Id) throws Exception;
 }
