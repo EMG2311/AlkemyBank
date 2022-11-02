@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IAccountRepository extends JpaRepository<Account, Integer> {
+public interface AccountRepository extends JpaRepository<Account, Integer> {
    @Query("SELECT a.accountId FROM Account a WHERE a.user = ?1 AND a.currency = ?2")
    Optional<Account> findAccountByUserIdAndCurrency(User user, Currency currency);
 }

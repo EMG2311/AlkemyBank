@@ -3,7 +3,7 @@ package com.alkemy.wallet.service.implementation;
 import com.alkemy.wallet.model.Account;
 import com.alkemy.wallet.model.Currency;
 import com.alkemy.wallet.model.User;
-import com.alkemy.wallet.repository.IAccountRepository;
+import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class AccountServiceImpl implements AccountService {
-    private final IAccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public void createAccount(int userId, Currency currency) {
