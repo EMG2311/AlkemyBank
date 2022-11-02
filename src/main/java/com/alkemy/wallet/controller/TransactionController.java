@@ -16,10 +16,11 @@ public class TransactionController {
     @Autowired
     TransactionService transactionService;
 
-    @GetMapping( value = "/{id}")
-    @PreAuthorize("hasRole('USER_ROLE')")
-    public ResponseEntity<Transaction> getTransactionDetailById(@PathVariable("id") Integer id ) throws Exception {
-        return ResponseEntity.ok(transactionService.getTransactionDetailById(id));
-    }
+//    @GetMapping( value = "/{id}")
+//    @PreAuthorize("hasRole('USER_ROLE')")
+//    public ResponseEntity<Transaction> getTransactionDetailById(@PathVariable("id") Integer id ) throws Exception {
+//        return ResponseEntity.ok(transactionService.getTransactionDetailById(id));
+//    }
+    //TODO: Uncomment when fixed
 
 }
