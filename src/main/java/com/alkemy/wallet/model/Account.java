@@ -1,9 +1,6 @@
 package com.alkemy.wallet.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,10 +8,7 @@ import java.sql.Timestamp;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Table(name = "ACCOUNTS")
 public class Account {
 
@@ -22,10 +16,6 @@ public class Account {
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "ACCOUNT_ID")
     private Integer accountId;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false, name = "USER_ID")
-    private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "CURRENCY")
@@ -37,12 +27,13 @@ public class Account {
     @Column(nullable = false, name = "BALANCE")
     private Double balance;
 
-    @ManyToOne( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn( name = "USER_ID", referencedColumnName = "USER_ID", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false, name = "USER_ID")
     private User user;
 
     // TODO: check timestamps format and auditing
     private Timestamp creationDate;
+
     private Timestamp updateDate;
 
     // TODO: check soft delete rules
