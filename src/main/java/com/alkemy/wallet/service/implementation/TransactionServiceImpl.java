@@ -1,6 +1,7 @@
 package com.alkemy.wallet.service.implementation;
 
-import com.alkemy.wallet.model.Transaction;
+import com.alkemy.wallet.dto.TransactionDetailDto;
+import com.alkemy.wallet.exception.ResourceNotFoundException;
 import com.alkemy.wallet.repository.TransactionRepository;
 import com.alkemy.wallet.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +15,13 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository repository ;
 
     @Override
-    public Transaction getTransactionDetailById(Integer Id) throws Exception {
+    public TransactionDetailDto getTransactionDetailById(Integer Id) throws ResourceNotFoundException {
         var transaction = Optional.of(repository.getById(Id));
         if(transaction.isPresent()){
-            return transaction.get();
+            return null; //transaction.stream()
+                    //.map(mapper::convertToDto);
         }else{
-            throw new Exception("This transaction does not exist");
+            throw new ResourceNotFoundException("Transaction is empty");
         }
     }
 
