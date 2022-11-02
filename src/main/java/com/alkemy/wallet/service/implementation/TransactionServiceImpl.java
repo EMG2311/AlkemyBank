@@ -14,9 +14,13 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository repository ;
 
     @Override
-    public Optional<Transaction> getTransactionDetailById(Integer Id){
-        var transaction = Optional.of(repository.getById(Id)).orElseThrow();
-        return Optional.of(transaction);
+    public Transaction getTransactionDetailById(Integer Id) throws Exception {
+        var transaction = Optional.of(repository.getById(Id));
+        if(transaction.isPresent()){
+            return transaction.get();
+        }else{
+            throw new Exception("This transaction does not exist");
+        }
     }
 
 }
