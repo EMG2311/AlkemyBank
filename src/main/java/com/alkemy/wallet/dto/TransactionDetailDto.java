@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
-import java.util.Date;
 
 
 @Data
@@ -26,15 +25,5 @@ public class TransactionDetailDto{
 
         @JsonProperty( "transactionDate" )
         private Timestamp transactionDate;
-
-        public TransactionDetailDto(Double amount, String description) {
-            this.amount = amount;
-            this.type = TransactionType.DEPOSIT;
-            this.description = description;
-            this.transactionDate = new Timestamp(new Date().getTime());
-        }
-
-        public TransactionDetailDto() {
-        }
 
 }
