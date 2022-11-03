@@ -1,10 +1,8 @@
 package com.alkemy.wallet.controller;
 
 
-import com.alkemy.wallet.dto.TransactionDepositDto;
 import com.alkemy.wallet.dto.TransactionDetailDto;
 import com.alkemy.wallet.exception.InvalidAmountException;
-import com.alkemy.wallet.model.Transaction;
 import com.alkemy.wallet.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +16,12 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-//    @GetMapping( value = "/{id}")
-//    @PreAuthorize("hasRole('USER_ROLE')")
-//    public ResponseEntity<Transaction> getTransactionDetailById(@PathVariable("id") Integer id ) throws Exception {
-//        return ResponseEntity.ok(transactionService.getTransactionDetailById(id));
-//    }
-    //TODO: Uncomment when fixed
+    @GetMapping( value = "/{id}")
+    @PreAuthorize("hasRole('USER_ROLE')")
+    public ResponseEntity<TransactionDetailDto> getTransactionDetailById(@PathVariable("id") Integer id ) throws Exception {
+        return ResponseEntity.ok(transactionService.getTransactionDetailById(id));
+    }
+
 
     // TODO: Undo comments when model mapper is available
     // TODO: Implement model mapper for Transaction (TransactionDepositDto)
