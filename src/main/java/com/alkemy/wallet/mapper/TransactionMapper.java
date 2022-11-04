@@ -23,8 +23,8 @@ public class TransactionMapper {
         return mapper.map( transactionDetailDto, Transaction.class);
 
   }
-    public Transaction TransactionPatchToTransaction(TransactionPatchDto transactionPatchDto) {
-        return mapper.map(transactionPatchDto,Transaction.class);
+    public TransactionDetailDto transactionPatchToTransaction(TransactionPatchDto transactionPatchDto) {
+        return mapper.map(transactionPatchDto,TransactionDetailDto.class);
     }
 
 
