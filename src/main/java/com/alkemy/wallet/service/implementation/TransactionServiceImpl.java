@@ -2,6 +2,7 @@ package com.alkemy.wallet.service.implementation;
 
 
 import com.alkemy.wallet.dto.TransactionDetailDto;
+import com.alkemy.wallet.dto.TransactionPatchDto;
 import com.alkemy.wallet.exception.ResourceNotFoundException;
 import com.alkemy.wallet.exception.InvalidAmountException;
 import com.alkemy.wallet.mapper.TransactionMapper;
@@ -41,5 +42,12 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public TransactionDetailDto updateTransaction(TransactionPatchDto transactionPatch, Integer Id) throws Exception {
+        var transaction = transactionRepository.findById(Id).orElseThrow(Exception::new);
+        transactionMapper.TransactionPatchToTransaction(transactionPatch, transaction);
+        return transactionMapper.convertToDto(transactionRepository.save(transaction));
     }
 }
