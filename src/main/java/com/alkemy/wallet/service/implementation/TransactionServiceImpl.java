@@ -47,7 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDetailDto updateTransaction(TransactionPatchDto transactionPatch, Integer Id) throws Exception {
         var transaction = transactionRepository.findById(Id).orElseThrow(Exception::new);
-        transactionMapper.TransactionPatchToTransaction(transactionPatch, transaction);
+        transactionMapper.TransactionPatchToTransaction(transactionPatch);
         return transactionMapper.convertToDto(transactionRepository.save(transaction));
     }
 }
