@@ -1,6 +1,7 @@
 package com.alkemy.wallet.mapper;
 
 import com.alkemy.wallet.dto.TransactionDetailDto;
+import com.alkemy.wallet.dto.TransactionPatchDto;
 import com.alkemy.wallet.model.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,4 +23,9 @@ public class TransactionMapper {
         return mapper.map( transactionDetailDto, Transaction.class);
 
   }
+    public Transaction TransactionPatchToTransaction(TransactionPatchDto transactionPatchDto) {
+        return mapper.map(transactionPatchDto,Transaction.class);
+    }
+
+
 }

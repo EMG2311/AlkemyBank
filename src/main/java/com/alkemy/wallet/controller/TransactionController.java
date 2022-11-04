@@ -2,6 +2,7 @@ package com.alkemy.wallet.controller;
 
 
 import com.alkemy.wallet.dto.TransactionDetailDto;
+import com.alkemy.wallet.dto.TransactionPatchDto;
 import com.alkemy.wallet.exception.InvalidAmountException;
 import com.alkemy.wallet.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,10 @@ public class TransactionController {
     @ExceptionHandler(InvalidAmountException.class)
     public ResponseEntity<Object> handleAmountException(Exception e){
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @PatchMapping(value="/transaction/:{id}")
+    ResponseEntity<TransactionDetailDto> updateTransaction(@RequestBody TransactionPatchDto transactionPatchDto, @PathVariable Integer id){
+        return ResponseEntity.ok(transactionService.updateTransaction(transactionPatchDto,id));
     }
 }
