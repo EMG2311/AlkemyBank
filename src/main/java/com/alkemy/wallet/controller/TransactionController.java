@@ -43,7 +43,7 @@ public class TransactionController {
     }
 
     @PatchMapping(value="/transaction/:{id}")
-    ResponseEntity<TransactionDetailDto> updateTransaction(@RequestBody TransactionPatchDto transactionPatchDto, @PathVariable Integer id){
+    ResponseEntity<TransactionDetailDto> updateTransaction(@RequestBody TransactionPatchDto transactionPatchDto, @PathVariable Integer id) throws Exception{
         return ResponseEntity.ok(transactionService.updateTransaction(transactionPatchDto,id));
     }
 }
