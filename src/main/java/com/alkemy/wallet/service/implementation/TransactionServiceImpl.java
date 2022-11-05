@@ -42,13 +42,15 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionDepositDto createDeposit(TransactionDepositRequestDto transactionDepositRequestDto) {
+        Double newTransactionAmount = transactionDepositRequestDto.getAmount();
+        accountService.increaseBalance(transactionDepositRequestDto.getAccountId(), newTransactionAmount);
+
+
         AccountDto accountDto = accountService.getAccountById(transactionDepositRequestDto.getAccountId());
         TransactionDepositDto transactionDepositDto = new TransactionDepositDto(
-                transactionDepositRequestDto.getAmount(),
+                newTransactionAmount,
                 transactionDepositRequestDto.getDescription());
 
-
-        Double newTransactionAmount = transactionDepositRequestDto.getAmount();
         // It would be nice to have an exception handler. We should implement it in a separate branch
         if(newTransactionAmount <= 0) {
             throw new InvalidAmountException();
@@ -56,6 +58,7 @@ public class TransactionServiceImpl implements TransactionService {
         if(newTransactionAmount > accountDto.transactionLimit()){
             throw new TransactionLimitExceededException("The transaction limit of " + accountDto.transactionLimit() + " was exceeded by a deposit of " + newTransactionAmount);
         }
+
 
         transactionDepositDto.setAccount(accountMapper.convertToEntity(accountDto));
         Transaction newTransaction = transactionRepository.save(transactionMapper.convertToEntity(transactionDepositDto));

@@ -1,7 +1,9 @@
 package com.alkemy.wallet.service.implementation;
 
 import com.alkemy.wallet.dto.AccountDto;
+import com.alkemy.wallet.exception.InvalidAmountException;
 import com.alkemy.wallet.exception.ResourceNotFoundException;
+import com.alkemy.wallet.exception.TransactionLimitExceededException;
 import com.alkemy.wallet.mapper.AccountMapper;
 import com.alkemy.wallet.model.Account;
 import com.alkemy.wallet.model.Currency;
@@ -54,6 +56,28 @@ public class AccountServiceImpl implements AccountService {
         Account updatedAccount = account.get();
         updatedAccount.setBalance(oldBalance - amount);
         return accountMapper.convertToDto(accountRepository.save(updatedAccount));
+    }
+
+    @Override
+    public AccountDto increaseBalance(int accountId, double amount) {
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if(optionalAccount.isEmpty()){
+            throw new InvalidParameterException("Account with id " + accountId + " not found");
+        }
+
+        Account account = optionalAccount.get();
+        double oldBalance = account.getBalance();
+
+        if(amount <= 0){
+            throw new InvalidAmountException();
+        }
+        if(amount > account.getTransactionLimit()){
+            throw new TransactionLimitExceededException("The balance increase of " + amount + " exceeded the transaction limit of " + account.getTransactionLimit());
+        }
+
+        account.setBalance(oldBalance + amount);
+
+        return accountMapper.convertToDto(accountRepository.save(account));
     }
 
     @Override
