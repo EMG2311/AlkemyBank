@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
@@ -55,6 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
         if(newTransactionAmount <= 0) {
             throw new InvalidAmountException();
         }
+
         if(newTransactionAmount > accountDto.transactionLimit()){
             throw new TransactionLimitExceededException("The transaction limit of " + accountDto.transactionLimit() + " was exceeded by a deposit of " + newTransactionAmount);
         }
@@ -64,5 +66,26 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction newTransaction = transactionRepository.save(transactionMapper.convertToEntity(transactionDepositDto));
 
         return transactionMapper.convertToTransactionDepositDto(newTransaction);
+    }
+
+    @Override
+    public List<TransactionDetailDto> getTransactions(Integer userId) {
+        List<Transaction> transactions = transactionRepository.findAll();
+        List<Transaction> transactionsOfUser = transactions
+                .stream()
+                .filter(transaction ->
+                        transaction.getAccount().getUser().getUserId().equals(userId))
+                .toList();
+
+        return convertTransactionListToDto(transactionsOfUser);
+
+    }
+
+    private List<TransactionDetailDto> convertTransactionListToDto(List<Transaction> transactions){
+        return transactions
+                .stream()
+                .map(transaction -> transactionMapper.convertToTransactionDetailDto(transaction))
+                .toList();
+
     }
 }
