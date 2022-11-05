@@ -19,7 +19,7 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/detail/{id}")
     @PreAuthorize("hasRole('USER_ROLE')")
     public ResponseEntity<TransactionDetailDto> getTransactionDetailById(@PathVariable("id") Integer id) throws Exception {
         return ResponseEntity.ok(transactionService.getTransactionDetailById(id));
@@ -35,7 +35,7 @@ public class TransactionController {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/all/{userId}")
 //    @PreAuthorize("hasRole('USER_ROLE')")
     public ResponseEntity<List<TransactionDetailDto>> listTransactions(@PathVariable Integer userId) {
         return ResponseEntity.ok(transactionService.getTransactions(userId));
