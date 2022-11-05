@@ -36,9 +36,7 @@ public class AccountServiceImpl implements AccountService {
         double balance = 0;
         double transactionLimit = getTransactionLimitForCurrency(currency);
 
-        Date date = new Date();
-        Timestamp creationDate = new Timestamp(date.getTime());
-        Account account = new Account(null, currency, transactionLimit, balance, user, creationDate, new Timestamp(date.getTime()), false);
+        Account account = new Account(currency, transactionLimit, balance, user);
 
         return accountMapper.convertToDto(accountRepository.save(account));
     }
