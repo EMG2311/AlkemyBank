@@ -11,6 +11,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Table(name = "ACCOUNTS")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Account {
 
     @Id
@@ -40,11 +41,4 @@ public class Account {
     // TODO: check soft delete rules
     private Boolean softDelete;
 
-    public Account(User user, Currency currency, Double transactionLimit, Double balance, Timestamp creationDate) {
-        this.currency = currency;
-        this.transactionLimit = transactionLimit;
-        this.balance = balance;
-        this.user = user;
-        this.creationDate = creationDate;
-    }
 }
