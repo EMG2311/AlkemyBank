@@ -27,12 +27,6 @@ public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private AccountMapper accountMapper;
-    @Autowired
-    private TransactionMapper transactionMapper;
 
     @GetMapping( value = "/{id}")
     @PreAuthorize("hasRole('USER_ROLE')")
@@ -42,14 +36,7 @@ public class TransactionController {
 
     @PostMapping( value = "/deposit" )
     public ResponseEntity<TransactionDepositDto> createDeposit(@RequestBody TransactionDepositRequestDto transactionDepositRequestDto) {
-        TransactionDepositDto transactionDepositDto = new TransactionDepositDto(transactionDepositRequestDto.getAmount(), transactionDepositRequestDto.getDescription());
-        AccountDto accountDto = accountService.getAccountById(transactionDepositRequestDto.getAccountId());
-
-        transactionDepositDto.setAccount(accountMapper.convertToEntity(accountDto));
-
-        Transaction transactionCreated = transactionService.createDeposit(transactionMapper.convertToEntity(transactionDepositDto));
-
-        return ResponseEntity.ok(transactionMapper.convertToTransactionDepositDto(transactionCreated));
+        return ResponseEntity.ok(transactionService.createDeposit(transactionDepositRequestDto));
     }
 
     @ExceptionHandler(InvalidAmountException.class)

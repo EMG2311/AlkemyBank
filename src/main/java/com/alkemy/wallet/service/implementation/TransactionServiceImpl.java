@@ -1,11 +1,17 @@
 package com.alkemy.wallet.service.implementation;
 
+import com.alkemy.wallet.dto.AccountDto;
+import com.alkemy.wallet.dto.TransactionDepositDto;
+import com.alkemy.wallet.dto.TransactionDepositRequestDto;
 import com.alkemy.wallet.dto.TransactionDetailDto;
 import com.alkemy.wallet.exception.ResourceNotFoundException;
 import com.alkemy.wallet.exception.InvalidAmountException;
+import com.alkemy.wallet.exception.TransactionLimitExceededException;
+import com.alkemy.wallet.mapper.AccountMapper;
 import com.alkemy.wallet.mapper.TransactionMapper;
 import com.alkemy.wallet.model.Transaction;
 import com.alkemy.wallet.repository.TransactionRepository;
+import com.alkemy.wallet.service.AccountService;
 import com.alkemy.wallet.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,10 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository transactionRepository;
     @Autowired
     private TransactionMapper transactionMapper;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Override
     public TransactionDetailDto getTransactionDetailById(Integer Id) throws ResourceNotFoundException {
@@ -31,14 +41,25 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction createDeposit(Transaction transaction) {
-        Double amount = transaction.getAmount();
+    public TransactionDepositDto createDeposit(TransactionDepositRequestDto transactionDepositRequestDto) {
+        AccountDto accountDto = accountService.getAccountById(transactionDepositRequestDto.getAccountId());
+        TransactionDepositDto transactionDepositDto = new TransactionDepositDto(
+                transactionDepositRequestDto.getAmount(),
+                transactionDepositRequestDto.getDescription());
 
+
+        Double newTransactionAmount = transactionDepositRequestDto.getAmount();
         // It would be nice to have an exception handler. We should implement it in a separate branch
-        if(amount <= 0) {
+        if(newTransactionAmount <= 0) {
             throw new InvalidAmountException();
         }
+        if(newTransactionAmount > accountDto.transactionLimit()){
+            throw new TransactionLimitExceededException("The transaction limit of " + accountDto.transactionLimit() + " was exceeded by a deposit of " + newTransactionAmount);
+        }
 
-        return transactionRepository.save(transaction);
+        transactionDepositDto.setAccount(accountMapper.convertToEntity(accountDto));
+        Transaction newTransaction = transactionRepository.save(transactionMapper.convertToEntity(transactionDepositDto));
+
+        return transactionMapper.convertToTransactionDepositDto(newTransaction);
     }
 }
