@@ -24,7 +24,7 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionDetailDto getTransactionDetailById(Integer Id) throws ResourceNotFoundException {
         var transaction = transactionRepository.findById(Id);
         if(transaction.isPresent()){
-            return transactionMapper.convertToDto(transaction.get());
+            return transactionMapper.convertToTransactionDetailDto(transaction.get());
         }else{
             throw new ResourceNotFoundException("Transaction does not exist");
         }
