@@ -45,15 +45,22 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto reduceBalance(int accountId, double amount) {
-        Optional<Account> account = accountRepository.findById(accountId);
-        if(account.isEmpty()){
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+
+        if(optionalAccount.isEmpty()){
             throw new InvalidParameterException("Not found account.");
         }
-        double oldBalance = account.get().getBalance();
+
+        Account updatedAccount = optionalAccount.get();
+
+        double oldBalance = updatedAccount.getBalance();
         if(oldBalance < amount){
             throw new InvalidParameterException("The amount to reduce is bigger than the current balance.");
         }
-        Account updatedAccount = account.get();
+        if(amount > updatedAccount.getTransactionLimit()) {
+            throw new TransactionLimitExceededException("The balance reduction of " + amount + " exceeded the transaction limit of " + updatedAccount.getTransactionLimit());
+        }
+
         updatedAccount.setBalance(oldBalance - amount);
         return accountMapper.convertToDto(accountRepository.save(updatedAccount));
     }
