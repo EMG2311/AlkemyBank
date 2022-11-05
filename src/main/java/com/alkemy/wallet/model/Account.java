@@ -14,6 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Table(name = "ACCOUNTS")
 @NoArgsConstructor
+@AllArgsConstructor
 @SQLDelete(sql = "UPDATE accounts SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 public class Account {
