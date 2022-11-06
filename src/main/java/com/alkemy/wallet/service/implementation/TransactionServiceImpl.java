@@ -4,6 +4,7 @@ import com.alkemy.wallet.dto.AccountDto;
 import com.alkemy.wallet.dto.TransactionDepositDto;
 import com.alkemy.wallet.dto.TransactionDepositRequestDto;
 import com.alkemy.wallet.dto.TransactionDetailDto;
+import com.alkemy.wallet.dto.TransactionPatchDto;
 import com.alkemy.wallet.exception.ResourceNotFoundException;
 import com.alkemy.wallet.exception.InvalidAmountException;
 import com.alkemy.wallet.exception.TransactionLimitExceededException;
@@ -87,5 +88,12 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(transaction -> transactionMapper.convertToTransactionDetailDto(transaction))
                 .toList();
 
+    }
+
+    @Override
+    public TransactionDetailDto updateTransaction(TransactionPatchDto transactionPatch, Integer Id) throws Exception {
+        var transaction = transactionRepository.findById(Id).orElseThrow(Exception::new);
+        transactionMapper.transactionPatchToTransaction(transactionPatch);
+        return transactionMapper.convertToDto(transactionRepository.save(transaction));
     }
 }
