@@ -4,7 +4,6 @@ import com.alkemy.wallet.dto.UserDetailDto;
 import com.alkemy.wallet.dto.UserDto;
 import com.alkemy.wallet.model.User;
 import com.alkemy.wallet.service.UserService;
-import com.alkemy.wallet.service.implementation.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +17,6 @@ import java.util.List;
 class UserController {
     private final UserService userservice;
 
-    private final UserServiceImpl userServiceImpl;
-
     @GetMapping
     List<UserDto> getAll() {
         return userservice.getAllUsers();
@@ -27,9 +24,9 @@ class UserController {
 
     @GetMapping( value = "/{id}")
     @PreAuthorize("hasRole('USER_ROLE')")
-    public ResponseEntity<UserDetailDto> getUserDetailById(@PathVariable("id") Integer id, @RequestHeader("Authorization") String token ) throws Exception {
-       User user = userServiceImpl.getUser(id,token);
-       return ResponseEntity.ok(userServiceImpl.getUserDetailById(user.getUserId()));
+    public ResponseEntity<UserDetailDto> getUserDetailById(@PathVariable("id") Integer id, @RequestHeader("Authorization") String token ){
+       User user = userservice.getUser(id,token);
+       return ResponseEntity.ok(userservice.getUserDetailById(user.getUserId()));
     }
 
 }
