@@ -9,7 +9,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "ACCOUNTS")
+@NoArgsConstructor
 public class Account {
 
     @Id
