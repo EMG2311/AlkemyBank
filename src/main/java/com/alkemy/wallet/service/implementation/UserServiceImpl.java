@@ -13,30 +13,28 @@ import com.alkemy.wallet.repository.UserRepository;
 import com.alkemy.wallet.security.JWTUtil;
 import com.alkemy.wallet.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.Id;
 import javax.swing.text.html.parser.Entity;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository repository;
-    private final UserMapper mapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final JWTUtil jwtUtil;
 
     @Override
     public List<UserDto> getAllUsers() {
-        var users = repository.findAll();
+        var users = userRepository.findAll();
         return users.stream()
-                    .map( mapper::convertToDto )
+                    .map( userMapper::convertToDto )
                     .toList();
     }
 
@@ -58,7 +56,7 @@ public class UserServiceImpl implements UserService {
         String passEncoded =passwordEncoder.encode(user.getPassword());
         user.setPassword(passEncoded);
 
-        return entityToDTO(repository.save(user));
+        return entityToDTO(userRepository.save(user));
     }
 
     @Override
@@ -95,7 +93,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        return repository.findByEmail(email);
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User getUserById(Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isEmpty()){
+            throw new ResourceNotFoundException("The user with id: " + id + " was not found");
+        }
+
+        return optionalUser.get();
     }
 
     public User getUser(Integer id, String token) throws ForbiddenAccessException {
