@@ -1,10 +1,7 @@
 package com.alkemy.wallet.service;
 
-import com.alkemy.wallet.dto.TransactionDepositDto;
-import com.alkemy.wallet.dto.TransactionDepositRequestDto;
-import com.alkemy.wallet.dto.TransactionDetailDto;
+import com.alkemy.wallet.dto.*;
 
-import com.alkemy.wallet.dto.TransactionPatchDto;
 import com.alkemy.wallet.model.Transaction;
 
 import java.util.List;
@@ -18,4 +15,5 @@ public interface TransactionService {
 
     List<TransactionDetailDto> getTransactions(Integer userId);
 
+    TransactionPaymentDto createPayment(TransactionPaymentRequestDto transactionPaymentRequestDto);
 }
