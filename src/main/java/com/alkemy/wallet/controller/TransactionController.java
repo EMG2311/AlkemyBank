@@ -32,10 +32,6 @@ public class TransactionController {
     public ResponseEntity<TransactionPaymentDto> createPayment(@RequestBody TransactionPaymentRequestDto transactionPaymentRequestDto) {
         return ResponseEntity.ok(transactionService.createPayment(transactionPaymentRequestDto));
     }
-    @ExceptionHandler(InvalidAmountException.class)
-    public ResponseEntity<Object> handleAmountException(Exception e){
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 
     @GetMapping(value = "/all/{userId}")
 //    @PreAuthorize("hasRole('USER_ROLE')")

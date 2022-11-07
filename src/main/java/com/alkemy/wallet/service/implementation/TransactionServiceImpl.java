@@ -51,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         // It would be nice to have an exception handler. We should implement it in a separate branch
         if(newTransactionAmount <= 0) {
-            throw new InvalidAmountException();
+            throw new InvalidAmountException("The amount must be greater than 0");
         }
 
         if(newTransactionAmount > accountDto.transactionLimit()){
@@ -74,6 +74,10 @@ public class TransactionServiceImpl implements TransactionService {
                         transaction.getAccount().getUser().getUserId().equals(userId))
                 .toList();
 
+        if(transactionsOfUser.isEmpty()){
+            throw new ResourceNotFoundException("The user with id " +  userId +" has no transactions");
+        }
+
         return convertTransactionListToDto(transactionsOfUser);
 
     }
@@ -91,7 +95,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         // It would be nice to have an exception handler. We should implement it in a separate branch
         if(newTransactionAmount <= 0) {
-            throw new InvalidAmountException();
+            throw new InvalidAmountException("The amount must be greater than 0");
         }
 
         if(newTransactionAmount > accountDto.transactionLimit()){
