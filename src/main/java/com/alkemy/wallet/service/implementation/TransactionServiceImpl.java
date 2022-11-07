@@ -7,13 +7,14 @@ import com.alkemy.wallet.exception.TransactionLimitExceededException;
 import com.alkemy.wallet.mapper.AccountMapper;
 import com.alkemy.wallet.mapper.TransactionMapper;
 import com.alkemy.wallet.model.Transaction;
+import com.alkemy.wallet.model.User;
 import com.alkemy.wallet.repository.TransactionRepository;
 import com.alkemy.wallet.service.AccountService;
 import com.alkemy.wallet.service.TransactionService;
+import com.alkemy.wallet.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -27,11 +28,15 @@ public class TransactionServiceImpl implements TransactionService {
     private AccountService accountService;
     @Autowired
     private AccountMapper accountMapper;
+    @Autowired
+    private UserService userService;
 
     @Override
-    public TransactionDetailDto getTransactionDetailById(Integer Id) throws ResourceNotFoundException {
-        var transaction = transactionRepository.findById(Id);
+    public TransactionDetailDto getTransactionDetailById(Integer transactionId, String userToken ) throws ResourceNotFoundException {
+        var transaction = transactionRepository.findById(transactionId);
         if(transaction.isPresent()){
+            User user = getUserByTransactionId(transactionId);
+            userService.matchUserToToken(user.getUserId(),userToken);
             return transactionMapper.convertToTransactionDetailDto(transaction.get());
         }else{
             throw new ResourceNotFoundException("Transaction does not exist");
@@ -94,11 +99,11 @@ public class TransactionServiceImpl implements TransactionService {
                 transactionPaymentRequestDto.getDescription());
 
         // It would be nice to have an exception handler. We should implement it in a separate branch
-        if(newTransactionAmount <= 0) {
+        if (newTransactionAmount <= 0) {
             throw new InvalidAmountException("The amount must be greater than 0");
         }
 
-        if(newTransactionAmount > accountDto.transactionLimit()){
+        if (newTransactionAmount > accountDto.transactionLimit()) {
             throw new TransactionLimitExceededException("The transaction limit of " + accountDto.transactionLimit() + " was exceeded by a payment of " + newTransactionAmount);
         }
 
@@ -107,6 +112,15 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction newTransaction = transactionRepository.save(transactionMapper.convertToEntity(transactionPaymentDto));
 
         return transactionMapper.convertToTransactionPaymentDto(newTransaction);
+    }
+
+    public User getUserByTransactionId(Integer id) {
+        var t = transactionRepository.findById(id);
+        if(t.isPresent()){
+            return t.get().getAccount().getUser();
+        }else {
+            throw new ResourceNotFoundException("Transaction does not exist");
+        }
     }
 
     private List<TransactionDetailDto> convertTransactionListToDto(List<Transaction> transactions){
