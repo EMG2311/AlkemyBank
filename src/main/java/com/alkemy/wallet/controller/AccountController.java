@@ -29,7 +29,7 @@ public class AccountController {
     }
 
     @PatchMapping(value="/{id}")
-    ResponseEntity<AccountDetailDto> updateAccount(@RequestBody AccountPatchDto accountPatchDto, @PathVariable Integer id, @RequestHeader("Authorization") String userToken) throws Exception {
+    public ResponseEntity<AccountDetailDto> updateAccount(@RequestBody AccountPatchDto accountPatchDto, @PathVariable Integer id, @RequestHeader("Authorization") String userToken) throws Exception {
         return ResponseEntity.ok(accountService.updateAccount(accountPatchDto, id, userToken));
     }
 }
