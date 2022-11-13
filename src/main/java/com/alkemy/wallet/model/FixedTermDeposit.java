@@ -1,9 +1,6 @@
 package com.alkemy.wallet.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +8,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "FIXED_TERM_DEPOSITS")
 @Data
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class FixedTermDeposit {
     public FixedTermDeposit(FixedTermDeposit fix){

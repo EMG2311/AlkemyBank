@@ -121,6 +121,18 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
     }
 
+    private AccountBalanceDto getAccountBalance(AccountDto account) {
+
+        AccountBalanceDto accountBalance = accountMapper.convertAccountDtoToAccountBalanceDto(account);
+        List<FixedTermDeposit> f = fixedTermDepositRepository.findByAccount_AccountId(account.id());
+        List<FixedTermDepositDto> fDto = new ArrayList<>();
+        for (FixedTermDeposit a : f) {
+            fDto.add(fixedTermDepositMapper.convertToDto(a));
+        }
+        accountBalance.setFixedTermDeposits(fDto);
+        return accountBalance;
+    }
+
     @Override
     public AccountDetailDto updateAccount(AccountPatchDto accountPatch, Integer Id, String userToken) throws ResourceNotFoundException {
         var account = accountRepository.findById(Id);
@@ -137,18 +149,6 @@ public class AccountServiceImpl implements AccountService {
     public boolean hasUserAccountById(Integer userId, Integer accountId) {
         AccountDto accountDto = getAccountById(accountId);
         return accountDto.userId().equals(userId);
-    }
-
-    private AccountBalanceDto getAccountBalance(AccountDto account) {
-
-        AccountBalanceDto accountBalance = accountMapper.convertAccountDtoToAccountBalanceDto(account);
-        List<FixedTermDeposit> f = fixedTermDepositRepository.findByAccount_AccountId(account.id());
-        List<FixedTermDepositDto> fDto = new ArrayList<>();
-        for (FixedTermDeposit a : f) {
-            fDto.add(fixedTermDepositMapper.convertToDto(a));
-        }
-        accountBalance.setFixedTermDeposits(fDto);
-        return accountBalance;
     }
 
     @Override
