@@ -17,4 +17,12 @@ public class UserUpdateDto {
     private String password;
 
 
+    @Override
+    public String toString() {
+        return "UserUpdateDto{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
