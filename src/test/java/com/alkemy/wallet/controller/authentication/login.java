@@ -14,6 +14,7 @@ import com.alkemy.wallet.repository.UserRepository;
 import com.alkemy.wallet.security.AuthenticationRequest;
 import com.alkemy.wallet.security.JWTUtil;
 import com.alkemy.wallet.service.AccountService;
+import com.alkemy.wallet.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -55,35 +56,28 @@ public class login {
     private RoleRepository roleRepository;
 
     @Autowired
+    private UserService userService;
+
+    User user;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        List<Role> roleList = new ArrayList<Role>();
 
-        roleList = roleRepository.findAll();
+        Role userRole = new Role(1, RoleName.USER, "Users rol", new Timestamp(System.currentTimeMillis()), null);
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String passEncoded = passwordEncoder.encode( "test" );
 
-        if(roleList.size()<2) {
-
-            Role role1 = new Role(1, RoleName.USER, "Users rol", new Timestamp(System.currentTimeMillis()), null);
-            roleRepository.save(role1);
-
-            Role role2 = new Role(2,RoleName.ADMIN, "Admins rol", new Timestamp( System.currentTimeMillis() ), null );
-            roleRepository.save(role2);
-
-        }
-
-
-        Role userRole = roleRepository.findById(1).orElse(new Role(1, RoleName.USER, "Users rol", new Timestamp(System.currentTimeMillis()), null));
-
-        User user = new User(1, "test", "test", "test@email.com", "test", userRole, new Timestamp(System.currentTimeMillis()), null, false);
+        user = new User(1, "test", "test", "test@email.com", passEncoded, userRole, new Timestamp(System.currentTimeMillis()), null, false);
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
+        when(userService.loadUserByUsername(user.getEmail())).thenReturn(user);
     }
 
     @Test
-    @Order(1)
     void correctLogin() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest("test@email.com","test");
@@ -96,7 +90,6 @@ public class login {
     }
 
     @Test
-    @Order(2)
     void incorrectLoginMail() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest("a","a");
