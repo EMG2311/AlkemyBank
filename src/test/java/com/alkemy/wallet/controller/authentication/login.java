@@ -45,7 +45,6 @@ public class login {
     @Autowired
     private MockMvc mockMvc;
 
-
     @MockBean
     private UserRepository userRepository;
 
@@ -54,9 +53,6 @@ public class login {
 
     @MockBean
     private RoleRepository roleRepository;
-
-    @Autowired
-    private UserService userService;
 
     User user;
 
@@ -74,7 +70,6 @@ public class login {
         user = new User(1, "test", "test", "test@email.com", passEncoded, userRole, new Timestamp(System.currentTimeMillis()), null, false);
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
-        when(userService.loadUserByUsername(user.getEmail())).thenReturn(user);
     }
 
     @Test
@@ -90,7 +85,7 @@ public class login {
     }
 
     @Test
-    void incorrectLoginMail() throws Exception {
+    void incorrectLoginMailAndPass() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest("a","a");
 
@@ -98,6 +93,18 @@ public class login {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authenticationRequest)))
                 .andExpect(status().isUnauthorized());
+        ;
+    }
+
+    @Test
+    void incorrectLoginNull() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest(null,null);
+
+        ResultActions resultActions = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(authenticationRequest)))
+                .andExpect(status().isBadRequest());
         ;
     }
 
