@@ -104,7 +104,6 @@ public class AccountServiceImpl implements AccountService {
         User user = userService.loadUserByUsername(jwtUtil.extractClaimUsername(userToken.substring(7)));
         List<Account> accounts = accountRepository.findAccountsByUserId(userService.getUserById(userId));
         return accounts.stream().map(accountMapper::convertToDto).collect(Collectors.toList());
-
     }
 
     @Override
@@ -116,6 +115,18 @@ public class AccountServiceImpl implements AccountService {
                 .stream()
                 .map(this::getAccountBalance)
                 .collect(Collectors.toList());
+    }
+
+    private AccountBalanceDto getAccountBalance(AccountDto account) {
+
+        AccountBalanceDto accountBalance = accountMapper.convertAccountDtoToAccountBalanceDto(account);
+        List<FixedTermDeposit> f = fixedTermDepositRepository.findByAccount_AccountId(account.id());
+        List<FixedTermDepositDto> fDto = new ArrayList<>();
+        for (FixedTermDeposit a : f) {
+            fDto.add(fixedTermDepositMapper.convertToDto(a));
+        }
+        accountBalance.setFixedTermDeposits(fDto);
+        return accountBalance;
     }
 
     @Override
@@ -134,18 +145,6 @@ public class AccountServiceImpl implements AccountService {
     public boolean hasUserAccountById(Integer userId, Integer accountId) {
         AccountDto accountDto = getAccountById(accountId);
         return accountDto.userId().equals(userId);
-    }
-
-    private AccountBalanceDto getAccountBalance(AccountDto account) {
-
-        AccountBalanceDto accountBalance = accountMapper.convertAccountDtoToAccountBalanceDto(account);
-        List<FixedTermDeposit> f = fixedTermDepositRepository.findByAccount_AccountId(account.id());
-        List<FixedTermDepositDto> fDto = new ArrayList<>();
-        for (FixedTermDeposit a : f) {
-            fDto.add(fixedTermDepositMapper.convertToDto(a));
-        }
-        accountBalance.setFixedTermDeposits(fDto);
-        return accountBalance;
     }
 
     @Override
