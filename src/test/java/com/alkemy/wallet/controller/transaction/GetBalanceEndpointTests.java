@@ -104,11 +104,6 @@ public class GetBalanceEndpointTests {
         arsFixedTermDepositsDto = List.of(fixedTermDepositMapper.convertToDto(fixedTermDepositArs1), fixedTermDepositMapper.convertToDto(fixedTermDepositArs2));
         usdFixedTermDepositsDto = List.of(fixedTermDepositMapper.convertToDto(fixedTermDepositUsd));
 
-
-//        when(fixedTermDepositRepository.findByAccount_AccountId(arsAccount.id())).thenReturn(arsFixedTermDeposits);
-//        when(fixedTermDepositRepository.findByAccount_AccountId(usdAccount.id())).thenReturn(usdFixedTermDeposits);
-
-
     }
 
     @Test
