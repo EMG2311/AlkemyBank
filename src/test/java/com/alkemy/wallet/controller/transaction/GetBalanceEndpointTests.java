@@ -88,11 +88,6 @@ public class GetBalanceEndpointTests {
 
         arsAccount = new AccountDto(1, user1.getUserId(), 75000d, Currency.ARS, 10000d, timestamp, timestamp, false);
         usdAccount = new AccountDto(2, user1.getUserId(), 35000d, Currency.USD, 2000d, timestamp, timestamp, false);
-        /*userAccounts = new ArrayList<>();
-        userAccounts.add(arsAccount);
-        userAccounts.add(usdAccount);*/
-
-        //when(accountService.getAccountsByUserId(user1.getUserId(), token1)).thenReturn(userAccounts);
 
         fixedTermDepositArs1 = new FixedTermDeposit(1, 1000.0, acc1, 50.0, timestamp, timestamp);
         fixedTermDepositArs2 = new FixedTermDeposit(2, 2000.0, acc1, 50.0, timestamp, timestamp);
